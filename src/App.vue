@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-
- 
-
-const lol = ref();
-
-console.log(lol.value);
-
-
-</script> 
-<template> 
-  <div>{{ lol }}</div>
+import { Card } from './components/ui/cards';
+</script>
+<template>
+  <div>
+    <main>
+      <Card />
+    </main>
+  </div>
 </template>
-
-<style scoped> 
+<style lang="scss">
+main {
+  & div {
+    font-size: 100px
+  }
+}
 </style>
