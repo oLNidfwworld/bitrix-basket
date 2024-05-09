@@ -14,5 +14,15 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
+  },
+  server : {
+    proxy : {
+      '/Api' : {
+        target : 'http://romb-art.ru',
+        changeOrigin : true,
+        secure: false,
+        // rewrite : (path) => path.replace(/^\/Api/, '')
+      }
+    }
   }
 })

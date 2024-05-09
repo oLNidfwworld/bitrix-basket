@@ -1,17 +1,12 @@
 <script setup lang="ts">
-import { Card } from './components/ui/cards';
+import { OrderTable } from './components/widgets/order-table';
+
+
 </script>
 <template>
-  <div>
-    <main>
-      <Card />
-    </main>
+  <div class="order-wrapper">  
+    <Suspense>
+      <OrderTable/>
+    </Suspense>
   </div>
-</template>
-<style lang="scss">
-main {
-  & div {
-    font-size: 100px
-  }
-}
-</style>
+</template> 
