@@ -4,14 +4,11 @@ type PersonType = {
   code: string
 }
 
-interface PersonTypeValues extends PersonType {
-  checked: boolean
-}
-
 type OrderProps = {
   id: number
   name: string
   pid: number
+  placeholder: string | undefined
   type: string
   code: string
   isZip: string
@@ -21,9 +18,13 @@ type OrderProps = {
   isAddressTo: string
 }
 
+interface OrderPropsValues extends OrderProps {
+  value: any
+}
+
 type PersonFields = {
   personType: PersonType
   orderProps: Array<OrderProps>
 }
 
-export type { PersonFields, PersonType, PersonTypeValues, OrderProps }
+export type { PersonFields, PersonType, OrderPropsValues, OrderProps }

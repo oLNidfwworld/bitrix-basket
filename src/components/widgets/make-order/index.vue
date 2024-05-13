@@ -1,7 +1,7 @@
 <template>
     <div class="order-block">
         <h2 class="style-some-title title-margin">Данные для оплаты</h2>
-        <form class="order-block__wrapper">
+        <form @submit.prevent="submit" class="order-block__wrapper">
             <div class="order-block__udata">
                 <div class="inpt-box">
                     <div class="inpt-box__name">
@@ -9,11 +9,11 @@
                     </div>
                     <div class="inpt-box__radios">
                         <RadioBox v-model:picked="currentPersonType" v-for="(item, index) in personTypes" :key="index"
-                            :text="item.name" name="personType" :id="item.code" :value="item.id" />
+                            :text="item.name" name="personType" :id="item.id" :value="item.id" />
                     </div>
                 </div>
-                <InputBox v-for="(item, index) in orerProps" :key="index" :field="item" type="text" required
-                    placehodler="Kek" />
+                <InputBox v-model:modelValue="currentOrderProps[index].value" v-for="(item, index) in currentOrderProps"
+                    :key="index" :placeholder="item.placeholder" :field="item" type="text" required />
             </div>
             <div class="order-block__final-wrapper">
                 <div class="order-block__final">
@@ -51,19 +51,28 @@
 import { InputBox } from '@/components/ui/input-box';
 import { RadioBox } from '@/components/ui/radio-box';
 import { useFetchApi } from '@/composables/useFetchApi';
-import type { OrderProps, PersonType, PersonTypeValues } from '@/helpers/api/orderFields';
-import { reactive, ref, watch } from 'vue';
+import type { OrderProps, PersonType, OrderPropsValues } from '@/helpers/api/orderFields';
+import { ref, shallowReactive, shallowRef, watch } from 'vue';
 
 const { data: response } = await useFetchApi<{
     orderProps: Array<OrderProps>,
     personTypes: Array<PersonType>
 }>('/Api/Order');
 
-const personTypes = reactive<Array<PersonType>>(response.value.personTypes);
-const currentPersonType = ref(personTypes[0].name);
+const personTypes = shallowReactive<Array<PersonType>>(response.value.personTypes);
+const currentPersonType = ref(personTypes[0].id as unknown as string);
 
-const orerProps = reactive(response.value.orderProps);
-watch(() => currentPersonType.value, (newVal) => {
-    console.log(newVal);
-})
+const orderProps = response.value.orderProps;
+const currentOrderProps = shallowRef<Array<OrderPropsValues>>([]);
+const getPropsFromPid = () => {
+    const currentOrderProps = orderProps.filter(prop => prop.pid === (currentPersonType.value as unknown as number));
+    return currentOrderProps as OrderPropsValues[];
+}
+currentOrderProps.value = getPropsFromPid();
+
+watch(() => currentPersonType.value, () => currentOrderProps.value = getPropsFromPid());
+
+const submit = () => {
+    console.log(currentOrderProps.value);
+}
 </script>
