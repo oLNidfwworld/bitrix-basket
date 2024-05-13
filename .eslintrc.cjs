@@ -20,6 +20,7 @@ module.exports = {
   rules: {
     'vue/multi-word-component-names': 'off',
     'vue/singleline-html-element-content-newline': ['off'],
+    'no-console': 'warn',
     'vue/html-self-closing': [
       'warn',
       {
