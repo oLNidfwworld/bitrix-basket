@@ -8,65 +8,12 @@
                         Заказчик<span class="text-red-required">*</span>
                     </div>
                     <div class="inpt-box__radios">
-                        <div class="radio">
-                            <input type="radio" name="buyer" value="Физ лицо" id="buyer-phys" /><label
-                                for="buyer-phys">Физическое лицо</label>
-                        </div>
-                        <div class="radio">
-                            <input type="radio" name="buyer" value="Юр лицо" id="buyer-jur" /><label
-                                for="buyer-jur">Юридическое лицо</label>
-                        </div>
+                        <RadioBox v-model:picked="currentPersonType" v-for="(item, index) in personTypes" :key="index"
+                            :text="item.name" name="personType" :id="item.code" :value="item.id" />
                     </div>
                 </div>
-                <div class="inpt-box">
-                    <div class="inpt-box__name">
-                        Контактное лицо<span class="text-red-required">*</span>
-                    </div>
-                    <input class="inpt" type="text" placeholder="Константинопольский Константин Константинович" />
-                </div>
-                <div class="inpt-box">
-                    <div class="inpt-box__name">
-                        Наименование компании<span class="text-red-required">*</span>
-                    </div>
-                    <input class="inpt" type="text" placeholder="Например: «ООО «Рога и копыта»" />
-                </div>
-                <div class="inpt-box">
-                    <div class="inpt-box__name">
-                        ИНН<span class="text-red-required">*</span>
-                    </div>
-                    <input class="inpt" type="text" placeholder="123456789012" />
-                </div>
-                <div class="inpt-box">
-                    <div class="inpt-box__name">
-                        ОГРН<span class="text-red-required">*</span>
-                    </div>
-                    <input class="inpt" type="text" placeholder="1234567890123" />
-                </div>
-                <div class="inpt-box">
-                    <div class="inpt-box__name">
-                        Адрес доставки<span class="text-red-required">*</span>
-                    </div>
-                    <input class="inpt" type="text" placeholder="Например: г. Саратов, Юбилейная ул., д. 22" />
-                </div>
-                <div class="inpt-box">
-                    <div class="inpt-box__name">
-                        Телефон<span class="text-red-required">*</span>
-                    </div>
-                    <input class="inpt" type="text" placeholder="+7 (_ _ _ ) _ _ _ - _ _ - _ _" />
-                </div>
-                <div class="inpt-box">
-                    <div class="inpt-box__name">
-                        Эл. почта<span class="text-red-required">*</span>
-                    </div>
-                    <input class="inpt" type="text" placeholder="Например: info@rombart.ru" />
-                </div>
-                <div class="inpt-box">
-                    <div class="inpt-box__name">
-                        Примечание к заказу<span class="text-red-required">*</span>
-                    </div>
-                    <input class="inpt" type="text"
-                        placeholder="Примечания к вашему заказу, например, особые пожелания отделу доставки." />
-                </div>
+                <InputBox v-for="(item, index) in orerProps" :key="index" :field="item" type="text" required
+                    placehodler="Kek" />
             </div>
             <div class="order-block__final-wrapper">
                 <div class="order-block__final">
@@ -100,3 +47,23 @@
     </div>
 
 </template>
+<script setup lang="ts">
+import { InputBox } from '@/components/ui/input-box';
+import { RadioBox } from '@/components/ui/radio-box';
+import { useFetchApi } from '@/composables/useFetchApi';
+import type { OrderProps, PersonType, PersonTypeValues } from '@/helpers/api/orderFields';
+import { reactive, ref, watch } from 'vue';
+
+const { data: response } = await useFetchApi<{
+    orderProps: Array<OrderProps>,
+    personTypes: Array<PersonType>
+}>('/Api/Order');
+
+const personTypes = reactive<Array<PersonType>>(response.value.personTypes);
+const currentPersonType = ref(personTypes[0].name);
+
+const orerProps = reactive(response.value.orderProps);
+watch(() => currentPersonType.value, (newVal) => {
+    console.log(newVal);
+})
+</script>

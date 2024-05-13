@@ -4,6 +4,10 @@ type PersonType = {
   code: string
 }
 
+interface PersonTypeValues extends PersonType {
+  checked: boolean
+}
+
 type OrderProps = {
   id: number
   name: string
@@ -22,4 +26,4 @@ type PersonFields = {
   orderProps: Array<OrderProps>
 }
 
-export type { PersonFields, PersonType, OrderProps }
+export type { PersonFields, PersonType, PersonTypeValues, OrderProps }

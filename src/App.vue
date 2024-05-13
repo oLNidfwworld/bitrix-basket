@@ -9,5 +9,8 @@ import { OrderTable } from './components/widgets/order-table';
     <Suspense>
       <OrderTable />
     </Suspense>
+    <Suspense>
+      <MakeOrder />
+    </Suspense>
   </div>
 </template>
