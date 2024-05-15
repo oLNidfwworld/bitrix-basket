@@ -13,7 +13,7 @@
                     </div>
                 </div>
                 <InputBox v-model:modelValue="currentOrderProps[index].value" v-for="(item, index) in currentOrderProps"
-                    :key="index" :placeholder="item.placeholder" :field="item" type="text" required />
+                    :key="index" :placeholder="item.placeholder" :field="item" type="text" />
             </div>
             <div class="order-block__final-wrapper">
                 <div class="order-block__final">
@@ -51,18 +51,19 @@
 import { InputBox } from '@/components/ui/input-box';
 import { RadioBox } from '@/components/ui/radio-box';
 import { useFetchApi } from '@/composables/useFetchApi';
-import type { OrderProps, PersonType, OrderPropsValues } from '@/helpers/api/orderFields';
+import type { OrderProps, PersonType, OrderPropsValues, OrderPropsBitrix } from '@/helpers/api/orderFields';
+import { toOrderProps } from '@/helpers/converters';
 import { ref, shallowReactive, shallowRef, watch } from 'vue';
 
 const { data: response } = await useFetchApi<{
-    orderProps: Array<OrderProps>,
+    orderProps: Array<OrderPropsBitrix>,
     personTypes: Array<PersonType>
 }>('/Api/Order');
 
 const personTypes = shallowReactive<Array<PersonType>>(response.value.personTypes);
 const currentPersonType = ref(personTypes[0].id as unknown as string);
 
-const orderProps = response.value.orderProps;
+const orderProps = toOrderProps(response.value.orderProps);
 const currentOrderProps = shallowRef<Array<OrderPropsValues>>([]);
 const getPropsFromPid = () => {
     const currentOrderProps = orderProps.filter(prop => prop.pid === (currentPersonType.value as unknown as number));
