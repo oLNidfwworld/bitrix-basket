@@ -21,6 +21,7 @@ module.exports = {
     'vue/multi-word-component-names': 'off',
     'vue/singleline-html-element-content-newline': ['off'],
     'no-console': 'warn',
+    'no-unused-vars': 'error',
     'vue/html-self-closing': [
       'warn',
       {

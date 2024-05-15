@@ -1,5 +1,5 @@
 <template>
-    <div class="products-table">
+    <div v-if="orderData.length > 0" class="products-table">
         <div class="products-table__header">
             <p>Товар</p>
             <p>Цена</p>
@@ -11,6 +11,10 @@
             <Card v-model:item="orderData[index]" v-for="(item, index) in orderData" :key="index" />
         </template>
         <OrderFooter :orderItems="orderData" />
+    </div>
+    <div class="empty-basket" v-else>
+        <h2>Ваша корзина пуста</h2>
+        <a href="/catalog/" class="btn dark">Каталог</a>
     </div>
 </template>
 <script setup lang="ts">
@@ -27,9 +31,22 @@ orderDataShallow.value.forEach(orderItem => {
         ...orderItem,
         poddonsCount: Math.ceil(orderItem.quantity / orderItem.quantityPerPoddon)
     });
-});
-
-
-
-console.table(orderData.value);
+}); 
 </script>
+<style lang="scss">
+.empty-basket {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+    color: var(--blue);
+    font-size: 40px;
+
+    h2 {
+        font-weight: 600;
+        font-size: inherit;
+        color: inherit;
+    }
+}
+</style>

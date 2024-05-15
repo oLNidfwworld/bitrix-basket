@@ -45,4 +45,19 @@ type PersonFields = {
   orderProps: Array<OrderProps>
 }
 
-export type { PersonFields, PersonType, OrderPropsValues, OrderPropsBitrix, OrderProps }
+type RequestFields = {
+  personType: string
+  fields: Array<{
+    code: string
+    value: string
+  }>
+}
+
+export type {
+  PersonFields,
+  PersonType,
+  OrderPropsValues,
+  OrderPropsBitrix,
+  OrderProps,
+  RequestFields
+}

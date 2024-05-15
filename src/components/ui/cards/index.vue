@@ -55,14 +55,11 @@ const measureString = computed(() => {
 });
 
 watch(() => model.value.poddonsCount, () => {
-    model.value.quantity = model.value.poddonsCount * model.value.quantityPerPoddon;
-    model.value.totalPrice = model.value.quantity * model.value.price;
+    model.value.quantity = Number.parseFloat((model.value.poddonsCount * model.value.quantityPerPoddon).toFixed(2));
+    model.value.totalPrice = Number.parseFloat((model.value.quantity * model.value.price).toFixed(2))
 })
 
 const isPending = ref<Boolean>(false);
-watch(() => isPending.value, () => {
-    console.log('isPending ', isPending.value);
-})
 watch(() => model.value.quantity, () => changeBasket());
 const changeBasket = useDebounceFn(async () => {
     isPending.value = true;
@@ -74,12 +71,7 @@ const changeBasket = useDebounceFn(async () => {
         })
     });
     isPending.value = false;
-    console.log(responseData.value);
-}, 950);
-
-// const fixQuantity = useDebounceFn( ( ) => {
-//     model.value.quantity = model.value.poddonsCount * model.value.quantityPerPoddon;
-// }, 700);
+}, 950); 
 </script>
 <style lang="scss">
 .product-card-table {

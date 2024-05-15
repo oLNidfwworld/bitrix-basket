@@ -1,17 +1,19 @@
 <template>
     <div v-if="metreItemsCalcData" class="products-table__footer">
-        <p>Всего товаров: {{ metreItemsCalcData.poddonsCount }} </p>
-        <p>Метраж: {{ metreItemsCalcData.metres }} м2</p>
+        <p>Всего товаров: {{ metreItemsCalcData.positions }} </p>
+        <p>Метраж: {{ metreItemsCalcData.metres }} м<sup>2</sup></p>
+        <p>Поддонов: {{ metreItemsCalcData.poddonsCount }} шт </p>
         <p class="products-table__total"><span>Сумма: </span><span>{{ metreItemsCalcData.sum }} ₽</span></p>
     </div>
     <div v-if="singleItemsCalcData" class="products-table__footer">
-        <p>Всего товаров: {{ singleItemsCalcData.count }} </p>
+        <p>Всего товаров: {{ singleItemsCalcData.positions }} </p>
+        <p>Штук: {{ singleItemsCalcData.count }} шт.</p>
         <p>Поддоны: {{ singleItemsCalcData.poddonsCount }} шт.</p>
         <p class="products-table__total"><span>Сумма: </span><span>{{ singleItemsCalcData.sum }} ₽</span></p>
     </div>
     <div v-if="allItemsCalcData" class="products-table__footer">
-        <p>Всего товаров: {{ allItemsCalcData.count }} </p>
-        <p>Поддоны: {{ allItemsCalcData.poddonsCount }} шт.</p>
+        <p>Всего товаров: {{ allItemsCalcData.positions }} </p>
+        <!-- <p>Поддоны: {{ allItemsCalcData.poddonsCount }} шт.</p> -->
         <p class="products-table__total"><span>Сумма: </span><span>{{ allItemsCalcData.sum }} ₽</span></p>
     </div>
 </template>
@@ -32,9 +34,10 @@ const singleItems = computed(() => {
     return props.orderItems.filter(xItem => xItem.measure === 'шт');
 });
 
+
 const metreItemsCalcData = computed(() => {
-    if (metreItems.value) {
-        let sum: number = 0, poddonsCount: number = 0, metres: number = 0;
+    if (metreItems.value.length > 0) {
+        let sum: number = 0, poddonsCount: number = 0, metres: number = 0, positions: number = metreItems.value.length;
 
         metreItems.value.forEach(item => {
             sum += item.totalPrice;
@@ -43,9 +46,10 @@ const metreItemsCalcData = computed(() => {
         })
 
         return {
-            sum,
+            positions,
+            sum: sum.toFixed(2),
             poddonsCount: poddonsCount.toLocaleString('ru-RU'),
-            metres
+            metres: metres.toFixed(2)
         };
     } else {
         return null;
@@ -53,8 +57,8 @@ const metreItemsCalcData = computed(() => {
 });
 
 const singleItemsCalcData = computed(() => {
-    if (singleItems.value) {
-        let sum: number = 0, poddonsCount: number = 0, count: number = 0;
+    if (singleItems.value.length > 0) {
+        let sum: number = 0, poddonsCount: number = 0, count: number = 0, positions: number = singleItems.value.length;
 
         singleItems.value.forEach(item => {
             count += item.quantity;
@@ -63,8 +67,9 @@ const singleItemsCalcData = computed(() => {
         })
 
         return {
+            positions,
             count,
-            sum,
+            sum: sum.toFixed(2),
             poddonsCount: poddonsCount.toLocaleString('ru-RU'),
         };
     } else {
@@ -75,7 +80,7 @@ const singleItemsCalcData = computed(() => {
 const allItemsCalcData = computed(() => {
     if (props.orderItems) {
 
-        let count: number = 0, poddonsCount: number = 0, sum: number = 0;
+        let count: number = 0, poddonsCount: number = 0, sum: number = 0, positions: number = props.orderItems.length;
 
         props.orderItems.forEach(item => {
             count += item.quantity;
@@ -84,6 +89,7 @@ const allItemsCalcData = computed(() => {
         })
 
         return {
+            positions,
             count,
             poddonsCount: poddonsCount.toLocaleString('ru-RU'),
             sum

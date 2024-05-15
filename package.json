@@ -15,7 +15,8 @@
   "dependencies": {
     "@vueuse/core": "^10.9.0",
     "@vueuse/integrations": "^10.9.0",
-    "vue": "^3.4.21"
+    "vue": "^3.4.21",
+    "vue-imask": "^7.6.0"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.8.0",

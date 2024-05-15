@@ -19,7 +19,7 @@
                 <div class="order-block__final">
                     <div class="order-block__final-checkbox checkbox">
                         <input type="checkbox" checked id="pay-pocket" name="pocket" /><label for="pay-pocket">Оплата по
-                            счёту для юридических лиц</label>
+                            счёту</label>
                     </div>
                     <div class="order-block__payment-notice">
                         <p class="order-block__payment-notice-text">
@@ -51,7 +51,7 @@
 import { InputBox } from '@/components/ui/input-box';
 import { RadioBox } from '@/components/ui/radio-box';
 import { useFetchApi } from '@/composables/useFetchApi';
-import type { OrderProps, PersonType, OrderPropsValues, OrderPropsBitrix } from '@/helpers/api/orderFields';
+import type { PersonType, OrderPropsValues, OrderPropsBitrix, RequestFields } from '@/helpers/api/orderFields';
 import { toOrderProps } from '@/helpers/converters';
 import { ref, shallowReactive, shallowRef, watch } from 'vue';
 
@@ -73,7 +73,22 @@ currentOrderProps.value = getPropsFromPid();
 
 watch(() => currentPersonType.value, () => currentOrderProps.value = getPropsFromPid());
 
-const submit = () => {
-    console.log(currentOrderProps.value);
+const submit = async () => {
+    const sendData: RequestFields = {
+        personType: currentPersonType.value,
+        fields: currentOrderProps.value.map((el) => { return { code: el.code, value: el.value } })
+    };
+    const { data: response } = await useFetchApi<{ status: boolean }>('/Api/Order/create', { method: 'POST', body: JSON.stringify(sendData) });
+    if (response.value.status === false) {
+        location.href = '/catalog';
+    } else {
+        // @ts-ignore
+        if ('showDanger' in window && typeof showDanger === 'function') {
+
+            // @ts-ignore
+            showDanger('Произошла непредвиденная ошибка');
+        }
+    }
 }
+
 </script>

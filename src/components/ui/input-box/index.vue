@@ -3,14 +3,18 @@
         <div class="inpt-box__name">
             {{ field.name }} <span v-if="requiredComputed" class="text-red-required">*</span>
         </div>
-        <input :type="(inputType as string)" :required="requiredComputed" class="inpt"
-            :placeholder="(placehodler as string)" v-model="internalModelValue" />
+        <input v-if="isPhone" v-imask="mask" :type="(inputType as string)" :required="requiredComputed" class="inpt"
+            :placeholder="(placeholderComputed as string)" v-bind="phoneAttrs" v-model="internalModelValue" />
+
+        <input v-else :type="(inputType as string)" :required="requiredComputed" class="inpt"
+            :placeholder="(placeholderComputed as string)" v-bind="phoneAttrs" v-model="internalModelValue" />
     </div>
 </template>
 <script setup lang="ts">
 import type { OrderProps } from '@/helpers/api/orderFields';
 import { useVModel } from '@vueuse/core';
-import { computed, useAttrs } from 'vue';
+import { computed, ref, useAttrs } from 'vue';
+import { IMaskDirective } from 'vue-imask';
 
 interface IProps {
     field: OrderProps,
@@ -20,7 +24,7 @@ interface IProps {
 defineOptions({
     inheritAttrs: false,
 });
-const { placehodler, required, type } = useAttrs();
+const { placeholder, required, type } = useAttrs();
 const props = defineProps<IProps>();
 const emit = defineEmits(['update:modelValue']);
 const internalModelValue = useVModel(props, 'modelValue', emit);
@@ -35,9 +39,13 @@ const requiredComputed = computed(() => {
     }
 });
 
+const isPhone = computed(() => props.field.isPhone);
+const vImask = IMaskDirective;
+const mask = ref('+{7} 000 000-00-00');
+
 const inputType = computed(() => {
-    if (props.field.isPhone) {
-        return 'number';
+    if (isPhone.value) {
+        return 'tel';
     } else if (props.field.isEmail) {
         return 'email';
     } else if (props.field.type === "NUMBER") {
@@ -48,6 +56,26 @@ const inputType = computed(() => {
         return 'text';
     }
 })
+
+const phoneAttrs = computed(() => {
+    if (isPhone.value) {
+        return {
+            pattern: '[\\+][7][\\s][\\d][\\d][\\d][\\s][\\d][\\d][\\d][\\-][\\d][\\d][\\-][\\d][\\d]'
+        }
+    } else {
+        return null;
+    }
+})
+
+const placeholderComputed = computed(() => {
+    if (props.field.placeholder) {
+        return props.field.placeholder
+    } else if (placeholder !== undefined || placeholder !== '') {
+        return placeholder
+    } else {
+        return '';
+    }
+});
 
 
 </script>
