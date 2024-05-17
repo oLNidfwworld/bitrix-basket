@@ -11,7 +11,7 @@
             <p>{{ priceFormated }} <span v-html="measureString" /></p>
         </div>
         <div class="product-card-table__col"><span class="product-card-table__hidden-header">Кол-во метров</span>
-            <CounterBlock inert="true" :measure-type="(model.measure === 'м') ? 'м' : 'шт'"
+            <CounterBlock :step="(model.measure === 'м') ? model.quantityPerPoddon : 1" :measure-type="model.measure"
                 v-model:model-value="model.quantity" />
         </div>
         <div class="product-card-table__col"><span class="product-card-table__hidden-header">Кол-во поддонов</span>
@@ -53,16 +53,34 @@ const measureString = computed(() => {
             return '';
     }
 });
+let isChanged = false;
+watch(() => model.value, ({ poddonsCount: newPoddonsCount, quantity: newQuantity }, { poddonsCount: oldPoddonsCount, quantity: oldQuantity }) => {
+    if (!isChanged) {
 
-watch(() => model.value.poddonsCount, () => {
-    model.value.quantity = Number.parseFloat((model.value.poddonsCount * model.value.quantityPerPoddon).toFixed(2));
-    model.value.totalPrice = Number.parseFloat((model.value.quantity * model.value.price).toFixed(2))
+        console.log('d')
+        const poddonsCountChanged = Math.abs(newPoddonsCount - oldPoddonsCount);
+        const quantityChanged = Math.abs(newQuantity - oldQuantity);
+        console.log(poddonsCountChanged);
+        console.log(quantityChanged);
+        isChanged = true
+    }
+}, {
+    deep: true,
 })
+// watch(() => model.value.poddonsCount, () => {
+//     model.value.quantity = Number.parseFloat((model.value.poddonsCount * model.value.quantityPerPoddon).toFixed(2));
+// })
+// watch(() => model.value.quantity, () => {
+//     model.value.totalPrice = Number.parseFloat((model.value.quantity * model.value.price).toFixed(2));
+//     model.value.poddonsCount = Math.ceil(model.value.quantity / model.value.quantityPerPoddon);
+//     changeBasket();
+// });
 
 const isPending = ref<Boolean>(false);
-watch(() => model.value.quantity, () => changeBasket());
 const changeBasket = useDebounceFn(async () => {
     isPending.value = true;
+
+    // eslint-disable-next-line no-unused-vars
     const { data: responseData } = await useFetchApi('/Api/Basket/change', {
         method: 'PUT',
         body: JSON.stringify({
