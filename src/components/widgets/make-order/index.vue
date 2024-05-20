@@ -51,6 +51,7 @@
 import { InputBox } from '@/components/ui/input-box';
 import { RadioBox } from '@/components/ui/radio-box';
 import { useFetchApi } from '@/composables/useFetchApi';
+import type { ApiResponse } from '@/helpers/api/apiResponse';
 import type { PersonType, OrderPropsValues, OrderPropsBitrix, RequestFields } from '@/helpers/api/orderFields';
 import { toOrderProps } from '@/helpers/converters';
 import { ref, shallowReactive, shallowRef, watch } from 'vue';
@@ -78,7 +79,7 @@ const submit = async () => {
         personType: currentPersonType.value,
         fields: currentOrderProps.value.map((el) => { return { code: el.code, value: el.value } })
     };
-    const { data: response } = await useFetchApi<{ status: boolean }>('/Api/Order/create', { method: 'POST', body: JSON.stringify(sendData) });
+    const { data: response } = await useFetchApi<ApiResponse>('/Api/Order/create', { method: 'POST', body: JSON.stringify(sendData) });
     if (response.value.status === false) {
         location.href = '/catalog';
     } else {

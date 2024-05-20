@@ -36,22 +36,26 @@ defineOptions({
 const attrs = useAttrs();
 const { inert } = attrs;
 
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(['update:modelValue', 'valuesChanging']);
 const props = withDefaults(defineProps<IProps>(), {
     theme: 'dark',
     step: 1
 });
 const innerValue = useVModel(props, 'modelValue', emit);
-
 const decrease = () => {
     if (innerValue.value) {
-        innerValue.value -= props.step;
+        const newValue = innerValue.value - props.step;
+        if (!(newValue <= 0)) {
+            innerValue.value = newValue;
+        }
     }
+    emit('valuesChanging');
 }
 const increase = () => {
     if (innerValue.value) {
         innerValue.value += props.step;
     }
+    emit('valuesChanging');
 }
 
 const measureString = computed(() => {

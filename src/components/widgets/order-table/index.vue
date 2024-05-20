@@ -8,7 +8,8 @@
             <p>Итог</p>
         </div>
         <template v-if="orderData">
-            <Card v-model:item="orderData[index]" v-for="(item, index) in orderData" :key="index" />
+            <Card @deleteItem="onDeleteItem" v-model:item="orderData[index]" v-for="(item, index) in orderData"
+                :key="item.id" />
         </template>
         <OrderFooter :orderItems="orderData" />
     </div>
@@ -31,7 +32,13 @@ orderDataShallow.value.forEach(orderItem => {
         ...orderItem,
         poddonsCount: Math.ceil(orderItem.quantity / orderItem.quantityPerPoddon)
     });
-}); 
+});
+
+const onDeleteItem = (eventArgs: OrderItem) => {
+    const indexItemToDelete = orderData.value.indexOf(eventArgs);
+    orderData.value.splice(indexItemToDelete, 1);
+}
+
 </script>
 <style lang="scss">
 .empty-basket {

@@ -47,9 +47,9 @@ const metreItemsCalcData = computed(() => {
 
         return {
             positions,
-            sum: sum.toFixed(2),
+            sum: Number(sum.toFixed(2)).toLocaleString('ru-RU'),
             poddonsCount: poddonsCount.toLocaleString('ru-RU'),
-            metres: metres.toFixed(2)
+            metres: Number(metres.toFixed(2)).toLocaleString('ru-RU')
         };
     } else {
         return null;
@@ -69,7 +69,7 @@ const singleItemsCalcData = computed(() => {
         return {
             positions,
             count,
-            sum: sum.toFixed(2),
+            sum: Number(sum.toFixed(2)).toLocaleString('ru-RU'),
             poddonsCount: poddonsCount.toLocaleString('ru-RU'),
         };
     } else {
@@ -92,7 +92,7 @@ const allItemsCalcData = computed(() => {
             positions,
             count,
             poddonsCount: poddonsCount.toLocaleString('ru-RU'),
-            sum
+            sum: Number(sum.toFixed(2)).toLocaleString('ru-RU')
         }
     } else {
         return null;
