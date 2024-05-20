@@ -20,5 +20,16 @@ export default defineConfig({
         secure: false
       }
     }
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        dir: 'dist',
+        entryFileNames: 'vueBundle.js',
+        assetFileNames: 'vueStyles.css',
+        chunkFileNames: 'vueChunk.js',
+        manualChunks: undefined
+      }
+    }
   }
 })
