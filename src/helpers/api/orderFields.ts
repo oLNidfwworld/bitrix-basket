@@ -4,6 +4,13 @@ type PersonType = {
   code: string
 }
 
+type Paysystem = {
+  id: string
+  paysysId: string
+  name: string
+  code: string
+}
+
 type OrderPropsBitrix = {
   id: number
   name: string
@@ -19,8 +26,10 @@ type OrderPropsBitrix = {
   isEmail: 'Y' | 'N'
   required: 'Y' | 'N'
 }
-
-type OrderProps = {
+interface OrderPropValues extends OrderProp {
+  value: any
+}
+type OrderProp = {
   id: number
   name: string
   pid: number
@@ -36,17 +45,25 @@ type OrderProps = {
   required: boolean
 }
 
-interface OrderPropsValues extends OrderProps {
-  value: any
+type OrderPayPersonFieldsRaw = {
+  personType: PersonType
+  orderProps: Array<OrderPropsBitrix>
+  paysystems: Array<Paysystem>
 }
 
-type PersonFields = {
+type OrderPayPersonFields = {
   personType: PersonType
-  orderProps: Array<OrderProps>
+  orderProps: Array<OrderPropValues>
+  paysystems: Array<Paysystem>
+}
+
+type OrderAvailableFields = {
+  payerBlocks: Array<OrderPayPersonFieldsRaw>
 }
 
 type RequestFields = {
-  personType: string
+  personType: string | number
+  paysystemId: string | number
   fields: Array<{
     code: string
     value: string
@@ -54,10 +71,13 @@ type RequestFields = {
 }
 
 export type {
-  PersonFields,
   PersonType,
-  OrderPropsValues,
+  Paysystem,
+  OrderPropValues,
   OrderPropsBitrix,
-  OrderProps,
-  RequestFields
+  OrderProp,
+  RequestFields,
+  OrderAvailableFields,
+  OrderPayPersonFieldsRaw,
+  OrderPayPersonFields
 }

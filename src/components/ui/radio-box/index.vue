@@ -1,7 +1,7 @@
 <template>
     <div class="radio">
-        <input v-model="pickedModel" type="radio" :name="name" :value="value" :id="id" />
-        <label :for="id">{{ text }}</label>
+        <input required v-model="pickedModel" type="radio" :name="name" :value="value" :id="prefix + id" />
+        <label :for="prefix + id">{{ text }}</label>
     </div>
 </template>
 <script setup lang="ts">
@@ -10,7 +10,8 @@ import { useAttrs } from 'vue';
 
 interface IProps {
     text: string,
-    picked: string
+    prefix: string,
+    picked: string | number
 }
 
 defineOptions({
@@ -25,3 +26,17 @@ const { id, name, value } = useAttrs() as {
 }
 const pickedModel = useVModel(props, 'picked', emit);
 </script>
+<style scoped>
+.radio input {
+    width: 1px;
+    height: 1px;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    left: 15px;
+}
+
+input[type="radio"]:user-invalid+label::before {
+    background: var(--red) !important;
+}
+</style>

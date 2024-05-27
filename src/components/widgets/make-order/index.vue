@@ -8,8 +8,8 @@
                         Заказчик<span class="text-red-required">*</span>
                     </div>
                     <div class="inpt-box__radios">
-                        <RadioBox v-model:picked="currentPersonType" v-for="(item, index) in personTypes" :key="index"
-                            :text="item.name" name="personType" :id="item.id" :value="item.id" />
+                        <RadioBox prefix="pid" v-model:picked="currentPersonType" v-for="(item) in personTypes"
+                            :key="item.id" :text="item.name" name="personType" :id="item.id" :value="item.id" />
                     </div>
                 </div>
                 <InputBox v-model:modelValue="currentOrderProps[index].value" v-for="(item, index) in currentOrderProps"
@@ -17,11 +17,12 @@
             </div>
             <div class="order-block__final-wrapper">
                 <div class="order-block__final">
-                    <div class="order-block__final-checkbox checkbox">
-                        <input type="checkbox" checked id="pay-pocket" name="pocket" /><label for="pay-pocket">Оплата по
-                            счёту</label>
+                    <div class="order-block__final-checkbox">
+                        <RadioBox prefix="paysystems" v-model:picked="currentPaySystem"
+                            v-for="(item) in currentPaySystems" :key="item.id" :text="item.name" name="paysys"
+                            :id="item.id" :value="item.id" />
                     </div>
-                    <div class="order-block__payment-notice">
+                    <!-- <div class="order-block__payment-notice">
                         <p class="order-block__payment-notice-text">
                             Оплата производится по счету, который выставляет менеджер на
                             основании Ваших реквизитов.
@@ -32,7 +33,7 @@
                                 <path d="M9.52628 0L19.0526 16.5H0L9.52628 0Z" fill="#BDC7D9" />
                             </svg>
                         </div>
-                    </div>
+                    </div> -->
                     <p class="order-block__terms-notice">
                         Нажимая на кнопку я принимаю
                         <a class="inline-link" href="link/to/terms">правила и условия </a> и
@@ -52,33 +53,43 @@ import { InputBox } from '@/components/ui/input-box';
 import { RadioBox } from '@/components/ui/radio-box';
 import { useFetchApi } from '@/composables/useFetchApi';
 import type { ApiResponse } from '@/helpers/api/apiResponse';
-import type { PersonType, OrderPropsValues, OrderPropsBitrix, RequestFields } from '@/helpers/api/orderFields';
-import { toOrderProps } from '@/helpers/converters';
+import type { OrderPayPersonFields, RequestFields } from '@/helpers/api/orderFields';
 import { ref, shallowReactive, shallowRef, watch } from 'vue';
 
-const { data: response } = await useFetchApi<{
-    orderProps: Array<OrderPropsBitrix>,
-    personTypes: Array<PersonType>
-}>('/Api/Order');
-
-const personTypes = shallowReactive<Array<PersonType>>(response.value.personTypes);
-const currentPersonType = ref(personTypes[0].id as unknown as string);
-
-const orderProps = toOrderProps(response.value.orderProps);
-const currentOrderProps = shallowRef<Array<OrderPropsValues>>([]);
-const getPropsFromPid = () => {
-    const currentOrderProps = orderProps.filter(prop => prop.pid === (currentPersonType.value as unknown as number));
-    return currentOrderProps as OrderPropsValues[];
+interface IProps {
+    payPersonFields: Array<OrderPayPersonFields>
 }
-currentOrderProps.value = getPropsFromPid();
 
-watch(() => currentPersonType.value, () => currentOrderProps.value = getPropsFromPid());
+const props = defineProps<IProps>();
+
+const personTypes = shallowReactive(props.payPersonFields.map(payPerson => payPerson.personType));
+const currentOrderProps = shallowRef(props.payPersonFields[0].orderProps);
+const currentPaySystems = shallowRef(props.payPersonFields[0].paysystems);
+
+const currentPersonType = ref(props.payPersonFields[0].personType.id);
+const currentPaySystem = ref(props.payPersonFields[0].paysystems[0].id);
+
+
+watch(() => currentPersonType.value, (newPayer) => {
+    const findedPayPersonFields = props.payPersonFields.find((payPersonField) => payPersonField.personType.id === newPayer);
+
+    if (findedPayPersonFields) {
+        currentOrderProps.value = findedPayPersonFields.orderProps;
+        currentPaySystems.value = findedPayPersonFields.paysystems;
+        currentPaySystem.value = currentPaySystems.value[0].id;
+    }
+
+});
+
+
 
 const submit = async () => {
     const sendData: RequestFields = {
         personType: currentPersonType.value,
+        paysystemId: currentPaySystem.value,
         fields: currentOrderProps.value.map((el) => { return { code: el.code, value: el.value } })
     };
+    console.log(sendData);
     const { data: response } = await useFetchApi<ApiResponse>('/Api/Order/create', { method: 'POST', body: JSON.stringify(sendData) });
     if (response.value.status === false) {
         location.href = '/catalog';
@@ -93,3 +104,10 @@ const submit = async () => {
 }
 
 </script>
+<style>
+.order-block__final-checkbox {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+</style>

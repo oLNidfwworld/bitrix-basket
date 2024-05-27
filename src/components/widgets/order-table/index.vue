@@ -19,20 +19,27 @@
     </div>
 </template>
 <script setup lang="ts">
+
+interface IProps {
+    items: Array<OrderItemRaw>,
+}
+
 import { Card } from '@/components/ui/cards';
-import { useFetchApi } from '@/composables/useFetchApi';
 import type { OrderItem, OrderItemRaw } from '@/helpers/api/orderItems';
-import { ref } from 'vue'; import { OrderFooter } from '.';
+import { ref, watch } from 'vue'; import { OrderFooter } from '.';
+
+const props = defineProps<IProps>();
 
 const orderData = ref<Array<OrderItem>>([]);
-const { data: orderDataShallow } = await useFetchApi<Array<OrderItemRaw>>('/Api/Basket');
 
-orderDataShallow.value.forEach(orderItem => {
-    orderData.value?.push({
-        ...orderItem,
-        poddonsCount: Math.ceil(orderItem.quantity / orderItem.quantityPerPoddon)
+watch(() => props.items, (newVal) => {
+    newVal.forEach(orderItem => {
+        orderData.value?.push({
+            ...orderItem,
+            poddonsCount: Math.ceil(orderItem.quantity / orderItem.quantityPerPoddon)
+        });
     });
-});
+})
 
 const onDeleteItem = (eventArgs: OrderItem) => {
     const indexItemToDelete = orderData.value.indexOf(eventArgs);

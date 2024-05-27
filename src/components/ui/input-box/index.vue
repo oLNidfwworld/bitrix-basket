@@ -11,13 +11,13 @@
     </div>
 </template>
 <script setup lang="ts">
-import type { OrderProps } from '@/helpers/api/orderFields';
+import type { OrderProp } from '@/helpers/api/orderFields';
 import { useVModel } from '@vueuse/core';
-import { computed, ref, useAttrs } from 'vue';
+import { computed, onUpdated, ref, useAttrs } from 'vue';
 import { IMaskDirective } from 'vue-imask';
 
 interface IProps {
-    field: OrderProps,
+    field: OrderProp,
     modelValue?: any,
 }
 
@@ -76,6 +76,5 @@ const placeholderComputed = computed(() => {
         return '';
     }
 });
-
 
 </script>
