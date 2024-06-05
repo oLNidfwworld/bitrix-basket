@@ -36,7 +36,7 @@ onMounted(async () => {
   });
 
   makeOrderInfo.value = [...convertedFields];
-  pendingLoading.value = false
+  pendingLoading.value = false;
 })
 
 </script>
