@@ -38,8 +38,10 @@ onMounted(async () => {
 <template>
   <div v-if="!pendingLoading" class="order-wrapper">
     <template v-if="orderData && orderData.length > 0 && makeOrderInfo">
+
       <OrderTable v-if="orderData" :items="orderData" />
       <MakeOrder v-if="makeOrderInfo && orderData && orderData.length > 0" :payPersonFields="makeOrderInfo" />
+
     </template>
     <div class="empty-basket" v-else>
       <h2>Ваша корзина пуста</h2>
