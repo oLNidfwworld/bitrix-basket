@@ -1,14 +1,14 @@
-import type { OrderProps, OrderPropsBitrix } from '../api/orderFields'
+import type { OrderProp, OrderPropsBitrix } from '../api/orderFields'
 
-function toOrderProps(orderPropsBitrix: OrderPropsBitrix): OrderProps
+function toOrderProps(orderPropsBitrix: OrderPropsBitrix): OrderProp
 
-function toOrderProps(orderPropsBitrix: OrderPropsBitrix[]): OrderProps[]
+function toOrderProps(orderPropsBitrix: OrderPropsBitrix[]): OrderProp[]
 
 function toOrderProps(
   orderPropsBitrix: OrderPropsBitrix | OrderPropsBitrix[]
-): OrderProps | OrderProps[] {
+): OrderProp | OrderProp[] {
   if (Array.isArray(orderPropsBitrix)) {
-    const converted: OrderProps[] = []
+    const converted: OrderProp[] = []
     orderPropsBitrix.forEach((orderProp) => converted.push(converToOrderProps(orderProp)))
     return converted
   } else {
@@ -16,7 +16,7 @@ function toOrderProps(
   }
 }
 
-const converToOrderProps = (orderPropsBitrix: OrderPropsBitrix): OrderProps => {
+const converToOrderProps = (orderPropsBitrix: OrderPropsBitrix): OrderProp => {
   return {
     id: orderPropsBitrix.id,
     name: orderPropsBitrix.name,
@@ -31,7 +31,7 @@ const converToOrderProps = (orderPropsBitrix: OrderPropsBitrix): OrderProps => {
     isAddressTo: orderPropsBitrix.isAddressTo === 'Y' ? true : false,
     isEmail: orderPropsBitrix.isEmail === 'Y' ? true : false,
     required: orderPropsBitrix.required === 'Y' ? true : false
-  } as OrderProps
+  } as OrderProp
 }
 
 export { toOrderProps }

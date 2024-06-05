@@ -25,8 +25,13 @@ onMounted(async () => {
   const convertedFields: Array<OrderPayPersonFields> = orderAvailableFields.map(orderFields => {
     return {
       personType: orderFields.personType,
-      orderProps: toOrderProps(orderFields.orderProps),
-      paysystems: orderFields.paysystems
+      orderProps: toOrderProps(orderFields.orderProps).map(prop => {
+        return {
+          ...prop,
+          value: '',
+        }
+      }),
+      paysystems: orderFields.paysystems,
     }
   });
 
