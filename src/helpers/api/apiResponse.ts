@@ -1,5 +1,5 @@
 type ApiResponse<T = unknown> = {
-  data: Array<T>
+  data: T
   message: string
   status: boolean
 }

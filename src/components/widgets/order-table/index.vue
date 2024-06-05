@@ -1,5 +1,5 @@
 <template>
-    <div v-if="orderData.length > 0" class="products-table">
+    <div class="products-table">
         <div class="products-table__header">
             <p>Товар</p>
             <p>Цена</p>
@@ -13,10 +13,6 @@
         </template>
         <OrderFooter :orderItems="orderData" />
     </div>
-    <div class="empty-basket" v-else>
-        <h2>Ваша корзина пуста</h2>
-        <a href="/catalog/" class="btn dark">Каталог</a>
-    </div>
 </template>
 <script setup lang="ts">
 
@@ -26,20 +22,19 @@ interface IProps {
 
 import { Card } from '@/components/ui/cards';
 import type { OrderItem, OrderItemRaw } from '@/helpers/api/orderItems';
-import { ref, watch } from 'vue'; import { OrderFooter } from '.';
+import { ref } from 'vue'; import { OrderFooter } from '.';
 
 const props = defineProps<IProps>();
 
 const orderData = ref<Array<OrderItem>>([]);
 
-watch(() => props.items, (newVal) => {
-    newVal.forEach(orderItem => {
-        orderData.value?.push({
-            ...orderItem,
-            poddonsCount: Math.ceil(orderItem.quantity / orderItem.quantityPerPoddon)
-        });
+props.items.forEach(orderItem => {
+    orderData.value.push({
+        ...orderItem,
+        poddonsCount: Math.ceil(orderItem.quantity / orderItem.quantityPerPoddon)
     });
-})
+});
+
 
 const onDeleteItem = (eventArgs: OrderItem) => {
     const indexItemToDelete = orderData.value.indexOf(eventArgs);

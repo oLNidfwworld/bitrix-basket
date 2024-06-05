@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, shallowRef } from 'vue';
+import { onMounted, ref, shallowRef } from 'vue';
 import { MakeOrder } from './components/widgets/make-order';
 import { OrderTable } from './components/widgets/order-table';
 import { useFetchApi } from './composables/useFetchApi';
@@ -9,11 +9,18 @@ import { toOrderProps } from './helpers/converters';
 
 const orderData = shallowRef<Array<OrderItem>>();
 const makeOrderInfo = shallowRef<Array<OrderPayPersonFields>>();
+const pendingLoading = ref(true);
+
+const promiseBasketItems = useFetchApi<Array<OrderItem>>('/Api/Basket');
+const promiseOrderFields = useFetchApi<OrderAvailableFields>('/Api/Order');
+
 
 onMounted(async () => {
-  orderData.value = (await useFetchApi<Array<OrderItem>>('/Api/Basket')).data.value;
+  const result = await Promise.all([promiseBasketItems, promiseOrderFields]);
 
-  const orderAvailableFields = (await useFetchApi<OrderAvailableFields>('/Api/Order')).data.value.payerBlocks;
+  orderData.value = result[0].data.value;
+
+  const orderAvailableFields = result[1].data.value.payerBlocks;
 
   const convertedFields: Array<OrderPayPersonFields> = orderAvailableFields.map(orderFields => {
     return {
@@ -24,12 +31,19 @@ onMounted(async () => {
   });
 
   makeOrderInfo.value = [...convertedFields];
+  pendingLoading.value = false
 })
 
 </script>
 <template>
-  <div class="order-wrapper">
-    <OrderTable v-if="orderData" :items="orderData" />
-    <MakeOrder v-if="makeOrderInfo" :payPersonFields="makeOrderInfo" />
+  <div v-if="!pendingLoading" class="order-wrapper">
+    <template v-if="orderData && orderData.length > 0 && makeOrderInfo">
+      <OrderTable v-if="orderData" :items="orderData" />
+      <MakeOrder v-if="makeOrderInfo && orderData && orderData.length > 0" :payPersonFields="makeOrderInfo" />
+    </template>
+    <div class="empty-basket" v-else>
+      <h2>Ваша корзина пуста</h2>
+      <a href="/catalog/" class="btn dark">Каталог</a>
+    </div>
   </div>
 </template>

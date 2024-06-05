@@ -22,24 +22,12 @@
                             v-for="(item) in currentPaySystems" :key="item.id" :text="item.name" name="paysys"
                             :id="item.id" :value="item.id" />
                     </div>
-                    <!-- <div class="order-block__payment-notice">
-                        <p class="order-block__payment-notice-text">
-                            Оплата производится по счету, который выставляет менеджер на
-                            основании Ваших реквизитов.
-                        </p>
-                        <div class="order-block__payment-notice-part">
-                            <svg width="20" height="17" viewBox="0 0 20 17" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path d="M9.52628 0L19.0526 16.5H0L9.52628 0Z" fill="#BDC7D9" />
-                            </svg>
-                        </div>
-                    </div> -->
                     <p class="order-block__terms-notice">
                         Нажимая на кнопку я принимаю
                         <a class="inline-link" href="link/to/terms">правила и условия </a> и
                         согласен с ними
                     </p>
-                    <button class="dark btn w-fit order-block__submit" type="submit">
+                    <button :inert="pendingOrder" class="dark btn w-fit order-block__submit" type="submit">
                         Подтвердить заказ
                     </button>
                 </div>
@@ -82,17 +70,27 @@ watch(() => currentPersonType.value, (newPayer) => {
 });
 
 
+const pendingOrder = ref(false);
 
 const submit = async () => {
+
+    if (pendingOrder.value)
+        return;
+
     const sendData: RequestFields = {
         personType: currentPersonType.value,
         paysystemId: currentPaySystem.value,
         fields: currentOrderProps.value.map((el) => { return { code: el.code, value: el.value } })
     };
-    console.log(sendData);
-    const { data: response } = await useFetchApi<ApiResponse>('/Api/Order/create', { method: 'POST', body: JSON.stringify(sendData) });
+    pendingOrder.value = true;
+    const { data: response } = await useFetchApi<
+        ApiResponse<{
+            orderId: string | number,
+            result: unknown
+        }>
+    >('/Api/Order/create', { method: 'POST', body: JSON.stringify(sendData) });
     if (response.value.status === false) {
-        location.href = '/catalog';
+        location.href = `/personal/orders/${response.value.data.orderId}`;
     } else {
         // @ts-ignore
         if ('showDanger' in window && typeof showDanger === 'function') {
@@ -101,6 +99,7 @@ const submit = async () => {
             showDanger('Произошла непредвиденная ошибка');
         }
     }
+    pendingOrder.value = false
 }
 
 </script>
