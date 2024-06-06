@@ -3,8 +3,9 @@
         <div class="inpt-box__name">
             {{ field.name }} <span v-if="requiredComputed" class="text-red-required">*</span>
         </div>
-        <input v-if="isPhone" v-imask="mask" :type="(inputType as string)" :required="requiredComputed" class="inpt"
-            :placeholder="(placeholderComputed as string)" v-bind="phoneAttrs" v-model="internalModelValue" />
+        <input v-if="isPhone" @accept="onAcceptMask" v-imask="mask" :type="(inputType as string)"
+            :required="requiredComputed" class="inpt" :placeholder="(placeholderComputed as string)"
+            v-bind="phoneAttrs" />
 
         <input v-else :type="(inputType as string)" :required="requiredComputed" class="inpt"
             :placeholder="(placeholderComputed as string)" v-bind="phoneAttrs" v-model="internalModelValue" />
@@ -13,7 +14,7 @@
 <script setup lang="ts">
 import type { OrderProp } from '@/helpers/api/orderFields';
 import { useVModel } from '@vueuse/core';
-import { computed, onUpdated, ref, useAttrs } from 'vue';
+import { computed, ref, useAttrs, watch } from 'vue';
 import { IMaskDirective } from 'vue-imask';
 
 interface IProps {
@@ -76,5 +77,11 @@ const placeholderComputed = computed(() => {
         return '';
     }
 });
+
+const onAcceptMask = (e: { detail: { value: string } }) => {
+    if (e) {
+        internalModelValue.value = e.detail.value;
+    }
+}
 
 </script>

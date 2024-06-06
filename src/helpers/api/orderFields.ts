@@ -26,9 +26,14 @@ type OrderPropsBitrix = {
   isEmail: 'Y' | 'N'
   required: 'Y' | 'N'
 }
-interface OrderPropValues extends OrderProp {
-  value: any
+type OrderPropsBitrixAutofilled = {
+  id: number
+  name: string
+  pid: string | undefined
+  code: string
+  value: string | ''
 }
+
 type OrderProp = {
   id: number
   name: string
@@ -43,6 +48,9 @@ type OrderProp = {
   isAddressTo: boolean
   isEmail: boolean
   required: boolean
+}
+interface OrderPropValues extends OrderProp {
+  value: any
 }
 
 type OrderPayPersonFieldsRaw = {
@@ -71,6 +79,7 @@ type RequestFields = {
 }
 
 export type {
+  OrderPropsBitrixAutofilled,
   PersonType,
   Paysystem,
   OrderPropValues,
