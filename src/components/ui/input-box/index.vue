@@ -14,7 +14,7 @@
 <script setup lang="ts">
 import type { OrderProp } from '@/helpers/api/orderFields';
 import { useVModel } from '@vueuse/core';
-import { computed, ref, useAttrs, watch } from 'vue';
+import { computed, ref, useAttrs } from 'vue';
 import { IMaskDirective } from 'vue-imask';
 
 interface IProps {

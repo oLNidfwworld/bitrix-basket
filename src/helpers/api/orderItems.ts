@@ -1,25 +1,27 @@
-type MeasureType = 'шт' | 'м';
+type MeasureType = 'шт' | 'м'
 
 type OrderItemRaw = {
-    id : number,
-    img : string,
-    measure : MeasureType,
-    name : string,
-    price : number,
-    quantity : number,
-    quantityPerPoddon : number,
-    totalPrice : number,
+  id: number
+  img: string
+  measure: MeasureType
+  name: string
+  price: number
+  quantity: number
+  quantityPerPoddon: number
+  totalPrice: number
+  detailPageUrl: string
 }
 type OrderItem = {
-    id : number,
-    img : string,
-    measure : MeasureType,
-    name : string,
-    price : number,
-    quantity : number,
-    quantityPerPoddon : number,
-    totalPrice : number,
-    poddonsCount : number
+  id: number
+  img: string
+  measure: MeasureType
+  name: string
+  price: number
+  quantity: number
+  quantityPerPoddon: number
+  totalPrice: number
+  poddonsCount: number
+  detailPageUrl: string
 }
 
-export type { OrderItem, OrderItemRaw, MeasureType } 
+export type { OrderItem, OrderItemRaw, MeasureType }

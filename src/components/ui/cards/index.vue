@@ -5,7 +5,7 @@
                 <source :srcset="`https://romb-art.ru` + model.img" />
                 <img />
             </picture>
-            <h3 class="product-card-table__name">{{ model.name }}</h3>
+            <a :href="model.detailPageUrl" class="product-card-table__name">{{ model.name }}</a>
         </div>
         <div class="product-card-table__price"><span class="product-card-table__hidden-header">Цена</span>
             <p>{{ priceFormated }} <span v-html="measureString" /></p>
