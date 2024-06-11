@@ -44,8 +44,6 @@ onMounted(async () => {
   });
 
   if (!result[2].data.value.status) {
-    console.log(result[2].data.value.data);
-
     autoFilledPayPersonId.value = Number(result[2].data.value.data[0].pid);
   }
 
