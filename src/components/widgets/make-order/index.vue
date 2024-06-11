@@ -98,7 +98,7 @@ const submit = async () => {
                 result: unknown
             }>
         >('/Api/Order/create', { method: 'POST', body: JSON.stringify(sendData) });
-        if (response.value.status === false) {
+        if (response.value.status !== false) {
             location.href = `/personal/orders/${response.value.data.orderId}`;
         } else {
             // @ts-ignore
