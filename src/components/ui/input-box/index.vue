@@ -42,7 +42,7 @@ const requiredComputed = computed(() => {
 
 const isPhone = computed(() => props.field.isPhone);
 const vImask = IMaskDirective;
-const mask = ref('+{7} 000 000-00-00');
+const mask = ref('+{7} 900 000-00-00');
 
 const inputType = computed(() => {
     if (isPhone.value) {
