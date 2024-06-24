@@ -9,6 +9,7 @@ type Paysystem = {
   paysysId: string
   name: string
   code: string
+  desc?: string
 }
 
 type OrderPropsBitrix = {
@@ -34,6 +35,19 @@ type OrderPropsBitrixAutofilled = {
   value: string | ''
 }
 
+type Delivery = {
+  id: string
+  code: string
+  name: string
+  logo: string
+}
+
+type Pickup = {
+  id: string
+  code: string
+  name: string
+}
+
 type OrderProp = {
   id: number
   name: string
@@ -53,20 +67,30 @@ interface OrderPropValues extends OrderProp {
   value: any
 }
 
+type OrderDeliveries = {
+  variants: Array<Delivery>
+  pickups: Array<Pickup>
+}
+
 type OrderPayPersonFieldsRaw = {
   personType: PersonType
   orderProps: Array<OrderPropsBitrix>
   paysystems: Array<Paysystem>
+  pickups: Array<Pickup>
+  deliviries: Array<Delivery>
 }
 
 type OrderPayPersonFields = {
   personType: PersonType
   orderProps: Array<OrderPropValues>
   paysystems: Array<Paysystem>
+  deliveries: Array<Delivery>
+  pickups: Array<Pickup>
 }
 
 type OrderAvailableFields = {
   payerBlocks: Array<OrderPayPersonFieldsRaw>
+  deliviries: OrderDeliveries
 }
 
 type RequestFields = {
@@ -76,6 +100,8 @@ type RequestFields = {
     code: string
     value: string
   }>
+  deliveryId: string | number
+  pickPoint?: string | number
 }
 
 export type {
@@ -88,5 +114,8 @@ export type {
   RequestFields,
   OrderAvailableFields,
   OrderPayPersonFieldsRaw,
-  OrderPayPersonFields
+  OrderPayPersonFields,
+  Delivery,
+  OrderDeliveries,
+  Pickup
 }
