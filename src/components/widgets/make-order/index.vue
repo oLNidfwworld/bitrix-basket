@@ -61,7 +61,7 @@
                     </div>
                     <p class="order-block__terms-notice">
                         Нажимая на кнопку я принимаю
-                        <a class="inline-link" href="link/to/terms">правила и условия </a> и
+                        <a class="inline-link" href="/privacy/">правила и условия </a> и
                         согласен с ними
                     </p>
                     <button :inert="pendingOrder" class="dark btn w-fit order-block__submit" type="submit">
