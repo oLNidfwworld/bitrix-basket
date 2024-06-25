@@ -15,7 +15,7 @@
                 <InputBox v-model:modelValue="currentOrderProps[index].value"
                     v-for="(item, index) in (currentOrderProps)" :key="index" :placeholder="item.placeholder"
                     :field="item" type="text" />
-                <div class="inpt-box">
+                <div class="order-block__delivery-group">
                     <div class="inpt-box__name">
                         Способ доставки<span class="text-red-required">*</span>
                     </div>
@@ -26,20 +26,20 @@
                                 name="delivery" :id="item.code" :value="item.id" />
                         </template>
                     </div>
-                </div>
-                <template v-if="typeOfDelivery === 'Доставка'">
-                    <InputBox v-if="adressProp" v-model:modelValue="adressProp.value"
-                        :placeholder="adressProp.placeholder" :field="adressProp" />
-                </template>
-                <template v-else-if="typeOfDelivery === 'Самовывоз'">
-                    <div>
-                        <div class="inpt-box">
-                            <RadioBox v-for="(item, index) in allPickPoints" required v-model:picked="currentPickPoint"
-                                prefix="pickpoint" :key="index" :text="item.name" name="pickpoints" :id="item.code"
-                                :value="item.id" />
-                        </div>
+                    <div class="order-block__delivery-group-inputs">
+                        <template v-if="typeOfDelivery === 'Доставка'">
+                            <InputBox v-if="adressProp" v-model:modelValue="adressProp.value"
+                                :placeholder="adressProp.placeholder" :field="adressProp" />
+                        </template>
+                        <template v-else-if="typeOfDelivery === 'Самовывоз'">
+                            <div class="inpt-box">
+                                <RadioBox v-for="(item, index) in allPickPoints" required
+                                    v-model:picked="currentPickPoint" prefix="pickpoint" :key="index" :text="item.name"
+                                    name="pickpoints" :id="item.code" :value="item.id" />
+                            </div>
+                        </template>
                     </div>
-                </template>
+                </div>
             </div>
             <div class="order-block__final-wrapper">
                 <div class="order-block__final">
@@ -48,7 +48,6 @@
 
                             <RadioBox prefix="paysystems" v-model:picked="currentPaySystem" :key="item.id"
                                 :text="item.name" name="paysys" :id="item.id" :value="item.id" />
-                            <!-- <Transition mode="in-out" name="paysystem-desc-appear"> -->
                             <div v-if="item.id === currentPaySystem" class="order-block__payment-notice">
                                 <p class="order-block__payment-notice-text">{{ item.desc }}</p>
                                 <div class="order-block__payment-notice-part"> <svg width="20" height="17"
@@ -56,7 +55,6 @@
                                         <path d="M9.52628 0L19.0526 16.5H0L9.52628 0Z" fill="#BDC7D9"></path>
                                     </svg> </div>
                             </div>
-                            <!-- </Transition> -->
                         </div>
                     </div>
                     <p class="order-block__terms-notice">
@@ -191,24 +189,7 @@ const submit = async () => {
     gap: 10px;
 }
 
-
-.paysystem-desc-appear-leave-active {
-    transition: 0.15s ease-out;
-}
-
-.paysystem-desc-appear-enter-active {
-    transition: 0.3s all ease-out;
-}
-
-.paysystem-desc-appear-leave-from,
-.paysystem-desc-appear-enter-to {
-    opacity: 1;
-    transform: translateX(0);
-}
-
-.paysystem-desc-appear-leave-to,
-.paysystem-desc-appear-enter-from {
-    opacity: 0;
-    transform: translateX(-20px);
+.order-block__delivery-group-inputs {
+    margin-top: 15px;
 }
 </style>

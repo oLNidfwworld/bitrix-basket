@@ -22,9 +22,10 @@ interface IProps {
 
 import { Card } from '@/components/ui/cards';
 import type { OrderItem, OrderItemRaw } from '@/helpers/api/orderItems';
-import { ref } from 'vue'; import { OrderFooter } from '.';
+import { ref, watch } from 'vue'; import { OrderFooter } from '.';
 
 const props = defineProps<IProps>();
+const emit = defineEmits(['update']);
 
 const orderData = ref<Array<OrderItem>>([]);
 
@@ -35,10 +36,21 @@ props.items.forEach(orderItem => {
     });
 });
 
+watch(() => orderData.value, () => {
+    console.log(orderData.value);
+}, {
+    deep: true
+})
+
 
 const onDeleteItem = (eventArgs: OrderItem) => {
     const indexItemToDelete = orderData.value.indexOf(eventArgs);
     orderData.value.splice(indexItemToDelete, 1);
+    console.log(orderData.value);
+
+    if (orderData.value.length <= 0) {
+        emit('update', orderData.value);
+    }
 }
 
 </script>

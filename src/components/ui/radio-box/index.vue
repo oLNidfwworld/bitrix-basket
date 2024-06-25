@@ -10,9 +10,6 @@
     </div>
 </template>
 <script setup lang="ts">
-import { useVModel } from '@vueuse/core';
-import { useAttrs } from 'vue';
-
 interface IProps {
     text: string,
     prefix: string,
@@ -20,6 +17,9 @@ interface IProps {
     preference?: "type-1" | "type-2",
     img?: string,
 }
+
+import { useVModel } from '@vueuse/core';
+import { useAttrs } from 'vue';
 
 defineOptions({
     inheritAttrs: false,

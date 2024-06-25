@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, shallowRef } from 'vue';
+import { onMounted, ref, shallowRef, watch } from 'vue';
 import { MakeOrder } from './components/widgets/make-order';
 import { OrderTable } from './components/widgets/order-table';
 import { useFetchApi } from './composables/useFetchApi';
@@ -50,12 +50,11 @@ onMounted(async () => {
   makeOrderInfo.value = [...convertedFields];
   pendingLoading.value = false;
 })
-
 </script>
 <template>
   <div v-if="!pendingLoading" class="order-wrapper">
     <template v-if="orderData && orderData.length > 0 && makeOrderInfo">
-      <OrderTable v-if="orderData" :items="orderData" />
+      <OrderTable v-if="orderData" :items="orderData" @update="orderData = $event" />
       <MakeOrder v-if="makeOrderInfo && deliveryOrderInfo && orderData && orderData.length > 0"
         :prefilledPayPerson="autoFilledPayPersonId" :payPersonFields="makeOrderInfo"
         :orderDeliviries="deliveryOrderInfo" />

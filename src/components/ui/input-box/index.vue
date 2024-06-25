@@ -12,16 +12,16 @@
     </div>
 </template>
 <script setup lang="ts">
-import type { OrderProp } from '@/helpers/api/orderFields';
-import { useVModel } from '@vueuse/core';
-import { computed, ref, useAttrs } from 'vue';
-import { IMaskDirective } from 'vue-imask';
 
 interface IProps {
     field: OrderProp,
     modelValue?: any,
 }
 
+import type { OrderProp } from '@/helpers/api/orderFields';
+import { useVModel } from '@vueuse/core';
+import { computed, ref, useAttrs } from 'vue';
+import { IMaskDirective } from 'vue-imask';
 defineOptions({
     inheritAttrs: false,
 });
