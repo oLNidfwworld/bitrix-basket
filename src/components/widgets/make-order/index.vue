@@ -164,6 +164,11 @@ const submit = async () => {
             // @ts-ignore
             if ('showDanger' in window && typeof showDanger === 'function') {
                 // @ts-ignore
+                if (response.value.message === 'failedtoregister') {
+                    // @ts-ignore
+                    showDanger((response.value.data as any)?.msg);
+                }
+                // @ts-ignore
                 showDanger('Произошла непредвиденная ошибка');
             }
         }
