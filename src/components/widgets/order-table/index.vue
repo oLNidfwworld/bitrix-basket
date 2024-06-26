@@ -32,21 +32,14 @@ const orderData = ref<Array<OrderItem>>([]);
 props.items.forEach(orderItem => {
     orderData.value.push({
         ...orderItem,
-        poddonsCount: Math.ceil(orderItem.quantity / orderItem.quantityPerPoddon)
+        poddonsCount: Math.ceil(orderItem.quantity / orderItem.quantityPerPoddon),
+        countable: true
     });
 });
-
-watch(() => orderData.value, () => {
-    console.log(orderData.value);
-}, {
-    deep: true
-})
-
 
 const onDeleteItem = (eventArgs: OrderItem) => {
     const indexItemToDelete = orderData.value.indexOf(eventArgs);
     orderData.value.splice(indexItemToDelete, 1);
-    console.log(orderData.value);
 
     if (orderData.value.length <= 0) {
         emit('update', orderData.value);

@@ -1,17 +1,17 @@
 <template>
     <div v-if="metreItemsCalcData" class="products-table__footer">
-        <p>Всего товаров: {{ metreItemsCalcData.positions }} </p>
+        <p>Тротуарная плитка: {{ metreItemsCalcData.positions }} </p>
         <p>Метраж: {{ metreItemsCalcData.metres }} м<sup>2</sup></p>
         <p>Поддонов: {{ metreItemsCalcData.poddonsCount }} шт </p>
         <p class="products-table__total"><span>Сумма: </span><span>{{ metreItemsCalcData.sum }} ₽</span></p>
     </div>
     <div v-if="singleItemsCalcData" class="products-table__footer">
-        <p>Всего товаров: {{ singleItemsCalcData.positions }} </p>
+        <p>Бордюр: {{ singleItemsCalcData.positions }} </p>
         <p>Штук: {{ singleItemsCalcData.count }} шт.</p>
         <p>Поддоны: {{ singleItemsCalcData.poddonsCount }} шт.</p>
         <p class="products-table__total"><span>Сумма: </span><span>{{ singleItemsCalcData.sum }} ₽</span></p>
     </div>
-    <div v-if="allItemsCalcData" class="products-table__footer">
+    <div v-if="allItemsCalcData && (singleItemsCalcData && metreItemsCalcData)" class="products-table__footer">
         <p>Всего товаров: {{ allItemsCalcData.positions }} </p>
         <!-- <p>Поддоны: {{ allItemsCalcData.poddonsCount }} шт.</p> -->
         <p class="products-table__total"><span>Сумма: </span><span>{{ allItemsCalcData.sum }} ₽</span></p>
@@ -27,11 +27,15 @@ interface IProps {
 
 const props = defineProps<IProps>();
 
+const countableItems = computed(() => {
+    return props.orderItems.filter(item => item.countable)
+})
+
 const metreItems = computed(() => {
-    return props.orderItems.filter(xItem => xItem.measure === 'м');
+    return countableItems.value.filter(xItem => xItem.measure === 'м');
 });
 const singleItems = computed(() => {
-    return props.orderItems.filter(xItem => xItem.measure === 'шт');
+    return countableItems.value.filter(xItem => xItem.measure === 'шт');
 });
 
 
@@ -78,11 +82,11 @@ const singleItemsCalcData = computed(() => {
 });
 
 const allItemsCalcData = computed(() => {
-    if (props.orderItems) {
+    if (countableItems.value) {
 
-        let count: number = 0, poddonsCount: number = 0, sum: number = 0, positions: number = props.orderItems.length;
+        let count: number = 0, poddonsCount: number = 0, sum: number = 0, positions: number = countableItems.value.length;
 
-        props.orderItems.forEach(item => {
+        countableItems.value.forEach(item => {
             count += item.quantity;
             poddonsCount += item.poddonsCount;
             sum += item.totalPrice;

@@ -120,7 +120,7 @@ const deleteProductBasket = async () => {
         // @ts-ignore
         showDanger('Произошла непредвиденная ошибка');
     }
-
+    model.value.countable = false;
     isPending.value = false;
     isDeleted.value = true;
 }
@@ -133,12 +133,12 @@ const undoDelete = async () => {
             count: model.value.quantity
         })
     });
-
     if (response.value.status) {
         // @ts-ignore
         showDanger('Произошла непредвиденная ошибка');
     }
 
+    model.value.countable = true;
     isDeleted.value = false;
 }
 

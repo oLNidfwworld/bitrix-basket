@@ -22,6 +22,7 @@ type OrderItem = {
   totalPrice: number
   poddonsCount: number
   detailPageUrl: string
+  countable: boolean
 }
 
 export type { OrderItem, OrderItemRaw, MeasureType }

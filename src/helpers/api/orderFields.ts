@@ -40,12 +40,15 @@ type Delivery = {
   code: string
   name: string
   logo: string
+  desc?: string
 }
 
 type Pickup = {
   id: string
   code: string
   name: string
+  isDefault: boolean
+  desc?: string
 }
 
 type OrderProp = {

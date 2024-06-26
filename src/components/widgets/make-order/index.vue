@@ -3,7 +3,7 @@
         <h2 class="style-some-title title-margin">Данные для оплаты</h2>
         <form @submit.prevent="submit" class="order-block__wrapper">
             <div v-if="currentOrderProps" class="order-block__udata">
-                <div class="inpt-box">
+                <div class="inpt-box order-block__person-group">
                     <div class="inpt-box__name">
                         Заказчик<span class="text-red-required">*</span>
                     </div>
@@ -16,16 +16,6 @@
                     v-for="(item, index) in (currentOrderProps)" :key="index" :placeholder="item.placeholder"
                     :field="item" type="text" />
                 <div class="order-block__delivery-group">
-                    <div class="inpt-box__name">
-                        Способ доставки<span class="text-red-required">*</span>
-                    </div>
-                    <div class="inpt-box__radios">
-                        <template v-if="currentDelivery">
-                            <RadioBox prefix="delivery" v-model:picked="currentDelivery" preference="type-2"
-                                :img="item.logo" v-for="(item, index) in allDeliviries" :key="index" :text="item.name"
-                                name="delivery" :id="item.code" :value="item.id" />
-                        </template>
-                    </div>
                     <div class="order-block__delivery-group-inputs">
                         <template v-if="typeOfDelivery === 'Доставка'">
                             <InputBox v-if="adressProp" v-model:modelValue="adressProp.value"
@@ -33,9 +23,14 @@
                         </template>
                         <template v-else-if="typeOfDelivery === 'Самовывоз'">
                             <div class="inpt-box">
-                                <RadioBox v-for="(item, index) in allPickPoints" required
-                                    v-model:picked="currentPickPoint" prefix="pickpoint" :key="index" :text="item.name"
-                                    name="pickpoints" :id="item.code" :value="item.id" />
+                                <div class="inpt-box__name">
+                                    Пункт выдачи заказа
+                                </div>
+                                <div class="inpt-box__radios">
+                                    <RadioBox v-for="(item, index) in allPickPoints" required
+                                        v-model:picked="currentPickPoint" prefix="pickpoint" :key="index"
+                                        :text="item.name" name="pickpoints" :id="item.code" :value="item.id" />
+                                </div>
                             </div>
                         </template>
                     </div>
@@ -44,17 +39,19 @@
             <div class="order-block__final-wrapper">
                 <div class="order-block__final">
                     <div v-if="currentPaySystem" class="order-block__final-checkbox">
-                        <div v-for="(item) in currentPaySystems" class="relative">
-
-                            <RadioBox prefix="paysystems" v-model:picked="currentPaySystem" :key="item.id"
-                                :text="item.name" name="paysys" :id="item.id" :value="item.id" />
-                            <div v-if="item.id === currentPaySystem" class="order-block__payment-notice">
-                                <p class="order-block__payment-notice-text">{{ item.desc }}</p>
-                                <div class="order-block__payment-notice-part"> <svg width="20" height="17"
-                                        viewBox="0 0 20 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M9.52628 0L19.0526 16.5H0L9.52628 0Z" fill="#BDC7D9"></path>
-                                    </svg> </div>
-                            </div>
+                        <div class="order-block__final-group">
+                            <h3>Способы оплаты</h3>
+                            <RadioBox v-for="(item) in currentPaySystems" prefix="paysystems"
+                                v-model:picked="currentPaySystem" :key="item.id" :text="item.name" name="paysys"
+                                :id="item.id" :value="item.id" :questionText="item.desc" />
+                        </div>
+                        <div class="order-block__final-group">
+                            <h3>Способы доставки</h3>
+                            <template v-if="currentDelivery">
+                                <RadioBox prefix="delivery" v-model:picked="currentDelivery" :img="item.logo"
+                                    v-for="(item, index) in allDeliviries" :key="index" :text="item.name"
+                                    :questionText="item.desc" name="delivery" :id="item.code" :value="item.id" />
+                            </template>
                         </div>
                     </div>
                     <p class="order-block__terms-notice">
@@ -95,10 +92,10 @@ const currentOrderProps = shallowRef<OrderPropValues[]>();
 const currentPaySystems = shallowRef<Paysystem[]>();
 const currentPaySystem = ref<string>();
 const allDeliviries = ref<Delivery[]>([...props.orderDeliviries.variants]);
-const currentDelivery = ref<string>();
+const currentDelivery = ref<string>(allDeliviries.value[0].id);
 
 const allPickPoints = ref<Pickup[]>([...props.orderDeliviries.pickups]);
-const currentPickPoint = ref<string>('');
+const currentPickPoint = ref<string>(allPickPoints.value.find(pickPoint => pickPoint.isDefault === true)?.id ?? '');
 
 const typeOfDelivery = computed(() => {
     return allDeliviries.value?.find(delivery => delivery.id === currentDelivery.value)?.name
@@ -114,7 +111,6 @@ const setFieldsAsPayperson = (pid: number) => {
 
         currentPaySystems.value = findedPayPersonFields.paysystems;
         currentPaySystem.value = currentPaySystems.value[0].id;
-        currentDelivery.value = allDeliviries.value[0].id;
     }
 }
 
@@ -124,8 +120,6 @@ watch(() => currentPersonType.value, (newPayer) => {
     setFieldsAsPayperson(newPayer);
 });
 
-
-
 const pendingOrder = ref(false);
 
 const submit = async () => {
@@ -134,7 +128,6 @@ const submit = async () => {
         return;
 
     if (currentPaySystem.value && currentDelivery.value && currentOrderProps.value) {
-
 
         const sendData: RequestFields = {
             personType: currentPersonType.value,
@@ -170,7 +163,6 @@ const submit = async () => {
             console.warn(response.value);
             // @ts-ignore
             if ('showDanger' in window && typeof showDanger === 'function') {
-
                 // @ts-ignore
                 showDanger('Произошла непредвиденная ошибка');
             }
@@ -183,13 +175,29 @@ const submit = async () => {
 
 </script>
 <style>
+.order-block__final-group {
+    margin-bottom: 20px;
+}
+
+.order-block__final-group h3 {
+    display: block;
+    color: var(--blue);
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
 .order-block__final-checkbox {
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
-.order-block__delivery-group-inputs {
-    margin-top: 15px;
+.order-block__person-group {
+    grid-column: span 2;
+}
+
+.order-block__delivery-group {
+    grid-column: span 2;
 }
 </style>

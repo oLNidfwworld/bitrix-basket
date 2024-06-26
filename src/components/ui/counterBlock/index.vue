@@ -7,7 +7,7 @@
             </svg>
         </button>
         <div class="quantity-block__count-wrapper">
-            <input class="quantity-block__count" type="number" :value="modelValue" />
+            <input readonly class="quantity-block__count" type="number" :value="modelValue" />
             <span class="quantity-block__measure" v-html="measureString" />
         </div>
         <button @click="increase" class="quantity-block__button">
