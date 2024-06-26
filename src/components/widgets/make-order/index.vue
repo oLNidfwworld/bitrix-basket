@@ -5,7 +5,7 @@
             <div v-if="currentOrderProps" class="order-block__udata">
                 <div class="inpt-box order-block__person-group">
                     <div class="inpt-box__name">
-                        Заказчик<span class="text-red-required">*</span>
+                        Заказчик
                     </div>
                     <div class="inpt-box__radios">
                         <RadioBox prefix="pid" v-model:picked="currentPersonType" v-for="(item) in personTypes"
@@ -29,7 +29,13 @@
                                 <div class="inpt-box__radios">
                                     <RadioBox v-for="(item, index) in allPickPoints" required
                                         v-model:picked="currentPickPoint" prefix="pickpoint" :key="index"
-                                        :text="item.name" name="pickpoints" :id="item.code" :value="item.id" />
+                                        :text="item.name" name="pickpoints" :id="item.code" :value="item.id">
+                                        <template #additional>
+                                            <div>
+                                                {{ item.schedule }}
+                                            </div>
+                                        </template>
+                                    </RadioBox>
                                 </div>
                             </div>
                         </template>

@@ -3,7 +3,13 @@
         <input required v-model="pickedModel" type="radio" :name="name" :value="value" :id="prefix + id" />
         <label v-if="preference === 'type-1'" :for="prefix + id">
             <div class="radio__wrapper">
-                {{ text }}
+                <div class="radio__text">
+                    <div v-if="text">
+                        {{ text }}
+                    </div>
+                    <slot v-else-if="$slots.default" />
+                    <slot v-if="$slots.additional" name="additional" />
+                </div>
                 <div class="radio__question-label" v-if="questionText" @mouseenter="questionLabelMouseEnter"
                     @mouseleave="questionLabelMouseLeave">
                     <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">

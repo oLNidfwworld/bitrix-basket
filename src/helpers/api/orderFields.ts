@@ -49,6 +49,7 @@ type Pickup = {
   name: string
   isDefault: boolean
   desc?: string
+  schedule?: string
 }
 
 type OrderProp = {
