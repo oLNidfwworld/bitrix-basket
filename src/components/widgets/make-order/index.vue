@@ -13,7 +13,7 @@
                     </div>
                 </div>
                 <InputBox v-model:modelValue="currentOrderProps[index].value"
-                    v-for="(item, index) in (currentOrderProps)" :key="index" :placeholder="item.placeholder"
+                    v-for="(item, index) in (currentOrderProps)" :key="item.id" :placeholder="item.placeholder"
                     :field="item" type="text" />
                 <div class="order-block__delivery-group">
                     <div class="order-block__delivery-group-inputs">
