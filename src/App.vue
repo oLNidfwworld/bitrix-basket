@@ -9,6 +9,10 @@ import { toOrderProps } from './helpers/converters';
 import type { ApiResponse } from './helpers/api/apiResponse';
 
 const orderData = shallowRef<Array<OrderItem>>();
+const addToBasketOuter = (items: Array<OrderItem>) => {
+  orderData.value = items;
+}
+window.addToBasketOuter = addToBasketOuter;
 const makeOrderInfo = shallowRef<Array<OrderPayPersonFields>>();
 const deliveryOrderInfo = shallowRef<OrderDeliveries>();
 const pendingLoading = ref(true);

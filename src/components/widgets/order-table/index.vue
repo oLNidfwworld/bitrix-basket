@@ -22,7 +22,7 @@ interface IProps {
 
 import { Card } from '@/components/ui/cards';
 import type { OrderItem, OrderItemRaw } from '@/helpers/api/orderItems';
-import { ref, watch } from 'vue'; import { OrderFooter } from '.';
+import { ref } from 'vue'; import { OrderFooter } from '.';
 
 const props = defineProps<IProps>();
 const emit = defineEmits(['update']);
