@@ -49,7 +49,21 @@ onMounted(async () => {
   }
   makeOrderInfo.value = [...convertedFields];
   pendingLoading.value = false;
-})
+
+  watch(() => orderData.value, () => {
+    if (orderData.value) {
+      const blockClassList = document.querySelector('#popularItems')?.classList;
+      if (orderData.value.length <= 0) {
+        if (blockClassList) blockClassList.remove('hidden');
+      } else {
+        if (blockClassList) blockClassList.add('hidden');
+      }
+    }
+  }, {
+    deep: true
+  })
+
+}) 
 </script>
 <template>
   <div v-if="!pendingLoading" class="order-wrapper">
