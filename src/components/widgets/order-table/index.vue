@@ -7,43 +7,35 @@
             <p>Количество поддонов</p>
             <p>Итог</p>
         </div>
-        <template v-if="orderData">
-            <Card @deleteItem="onDeleteItem" v-model:item="orderData[index]" v-for="(item, index) in orderData"
+        <template v-if="model">
+            <Card @deleteItem="onDeleteItem" v-model:item="model[index]" v-for="(item, index) in model"
                 :key="item.id" />
         </template>
-        <OrderFooter :orderItems="orderData" />
+        <OrderFooter :orderItems="model" />
     </div>
 </template>
 <script setup lang="ts">
 
 interface IProps {
-    items: Array<OrderItemRaw>,
+    items: Array<OrderItem>,
 }
 
 import { Card } from '@/components/ui/cards';
-import type { OrderItem, OrderItemRaw } from '@/helpers/api/orderItems';
-import { ref } from 'vue'; import { OrderFooter } from '.';
+import type { OrderItem } from '@/helpers/api/orderItems';
+import { OrderFooter } from '.';
+import { useVModel } from '@vueuse/core';
 
 const props = defineProps<IProps>();
-const emit = defineEmits(['update']);
-
-const orderData = ref<Array<OrderItem>>([]);
-
-props.items.forEach(orderItem => {
-    orderData.value.push({
-        ...orderItem,
-        poddonsCount: Math.ceil(orderItem.quantity / orderItem.quantityPerPoddon),
-        countable: true
-    });
-});
+const emit = defineEmits(['update:items']);
+const model = useVModel(props, 'items', emit);
 
 const onDeleteItem = (eventArgs: OrderItem) => {
-    const indexItemToDelete = orderData.value.indexOf(eventArgs);
-    orderData.value.splice(indexItemToDelete, 1);
+    const indexItemToDelete = model.value.indexOf(eventArgs);
+    model.value.splice(indexItemToDelete, 1);
 
-    if (orderData.value.length <= 0) {
-        emit('update', orderData.value);
-    }
+    // if (orderData.value.length <= 0) {
+    //     emit('update', orderData.value);
+    // }
 }
 
 </script>
