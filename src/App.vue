@@ -54,7 +54,7 @@ onMounted(async () => {
     if (orderData.value) {
       const blockClassList = document.querySelector('#popularItems')?.classList;
       if (orderData.value.length <= 0) {
-        if (blockClassList) blockClassList.remove('hidden');
+        if (blockClassList && blockClassList.contains('hidden')) blockClassList.remove('hidden');
       } else {
         if (blockClassList) blockClassList.add('hidden');
       }
