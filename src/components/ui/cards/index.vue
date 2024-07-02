@@ -1,10 +1,12 @@
 <template>
     <div ref="rootElement" class="product-card-table">
         <div class="product-card-table__main-info">
-            <picture>
-                <source :srcset="`https://romb-art.ru` + model.img" />
-                <img />
-            </picture>
+            <a class="product-card-table__image-href" :href="model.detailPageUrl">
+                <picture>
+                    <source :srcset="`https://romb-art.ru` + model.img" />
+                    <img />
+                </picture>
+            </a>
             <a :href="model.detailPageUrl" class="product-card-table__name">{{ model.name }}</a>
         </div>
         <div class="product-card-table__price"><span class="product-card-table__hidden-header">Цена</span>
@@ -167,6 +169,11 @@ const hideDeleted = () => {
 
 </script>
 <style lang="scss">
+.product-card-table__image-href {
+    display: block;
+    margin: auto;
+}
+
 .delete-appearing-enter-active,
 .delete-appearing-leave-active {
     transition: opacity 0.3s ease-out;
