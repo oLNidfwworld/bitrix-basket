@@ -12,7 +12,14 @@
         <div class="product-card-table__price"><span class="product-card-table__hidden-header">Цена</span>
             <p>{{ priceFormated }} <span v-html="measureString" /></p>
         </div>
-        <div class="product-card-table__col"><span class="product-card-table__hidden-header">Кол-во метров</span>
+        <div class="product-card-table__col"><span class="product-card-table__hidden-header">
+                <template v-if="model.measure === 'м'">
+                    Кол-во метров
+                </template>
+                <template v-else>
+                    Кол-во штук
+                </template>
+            </span>
             <CounterBlock :step="(model.measure === 'м') ? model.quantityPerPoddon : 1" :measure-type="model.measure"
                 v-model:model-value="model.quantity" @values-changing="changeQuantity" />
         </div>
