@@ -15,7 +15,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/Api': {
-        target: 'http://romb-art.ru',
+        target: 'https://romb-art.ru',
         changeOrigin: true,
         secure: false
       }
