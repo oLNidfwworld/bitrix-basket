@@ -1,16 +1,4 @@
 <template>
-    <div v-if="metreItemsCalcData" class="products-table__footer">
-        <p>Тротуарная плитка: {{ metreItemsCalcData.positions }} </p>
-        <p>Метраж: {{ metreItemsCalcData.metres }} м<sup>2</sup></p>
-        <p>Поддоны: {{ metreItemsCalcData.poddonsCount }} шт </p>
-        <p class="products-table__total"><span>Сумма: </span><span>{{ metreItemsCalcData.sum }} ₽</span></p>
-    </div>
-    <div v-if="singleItemsCalcData" class="products-table__footer">
-        <p>Бордюр: {{ singleItemsCalcData.positions }} </p>
-        <p>Штук: {{ singleItemsCalcData.count }} шт.</p>
-        <p>Поддоны: {{ singleItemsCalcData.poddonsCount }} шт.</p>
-        <p class="products-table__total"><span>Сумма: </span><span>{{ singleItemsCalcData.sum }} ₽</span></p>
-    </div>
     <div v-if="allItemsCalcData && (singleItemsCalcData && metreItemsCalcData)" class="products-table__footer">
         <p>Всего товаров: {{ allItemsCalcData.positions }} </p>
         <!-- <p>Поддоны: {{ allItemsCalcData.poddonsCount }} шт.</p> -->
